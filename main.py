@@ -3,12 +3,21 @@ import tkinter as tk
 from tkinter import filedialog, messagebox
 import os
 
-key = b'MySecretKey12345'  # 16 bytes key (AES-128)
+# ================= KEY HANDLING =================
+key = os.getenv("AES_KEY")
+
+if not key:
+    key_missing = True
+else:
+    key_missing = False
+    key = key.encode()
+
 file_path = ""
 
-# ================= selecting a file =================
+# ================= SELECT FILE =================
 def select_file():
     global file_path
+
     file_path = filedialog.askopenfilename()
 
     if file_path:
@@ -16,8 +25,13 @@ def select_file():
     else:
         file_label.config(text="No file selected")
 
+
 # ================= ENCRYPT =================
 def encrypt_file():
+    if key_missing:
+        messagebox.showerror("Error", "AES_KEY is not set in environment variables")
+        return
+
     if not file_path:
         messagebox.showerror("Error", "Please select a file first")
         return
@@ -26,7 +40,7 @@ def encrypt_file():
         with open(file_path, 'rb') as f:
             data = f.read()
 
-        # padding
+        # Padding
         while len(data) % 16 != 0:
             data += b' '
 
@@ -35,17 +49,25 @@ def encrypt_file():
 
         output_path = file_path + ".enc"
 
+        # Prevent overwrite warning logic (optional safety)
+        if os.path.exists(output_path):
+            output_path = file_path + "_new.enc"
+
         with open(output_path, "wb") as f:
             f.write(encrypted)
 
-        messagebox.showinfo("Success", f"Encrypted:\n{output_path}")
+        messagebox.showinfo("Success", f"Encrypted File:\n{output_path}")
 
     except Exception as e:
-        messagebox.showerror("Error", str(e))
+        messagebox.showerror("Encryption Error", str(e))
 
 
 # ================= DECRYPT =================
 def decrypt_file():
+    if key_missing:
+        messagebox.showerror("Error", "AES_KEY is not set in environment variables")
+        return
+
     if not file_path:
         messagebox.showerror("Error", "Please select a file first")
         return
@@ -59,22 +81,26 @@ def decrypt_file():
 
         output_path = file_path.replace(".enc", "_decrypted")
 
+        if os.path.exists(output_path):
+            output_path = file_path.replace(".enc", "_decrypted_new")
+
         with open(output_path, "wb") as f:
             f.write(decrypted)
 
-        messagebox.showinfo("Success", f"Decrypted:\n{output_path}")
+        messagebox.showinfo("Success", f"Decrypted File:\n{output_path}")
 
     except Exception as e:
-        messagebox.showerror("Error", str(e))
+        messagebox.showerror("Decryption Error", str(e))
 
 
-# ================= GUI =================
+# ================= UI =================
 app = tk.Tk()
 app.title("SecureVault - AES Encryption Tool")
 app.geometry("500x320")
 app.configure(bg="#121212")
 app.resizable(False, False)
 
+# TITLE
 title = tk.Label(
     app,
     text="🔐 SecureVault Encryption",
@@ -88,6 +114,7 @@ title.pack(pady=15)
 frame = tk.Frame(app, bg="#1e1e1e")
 frame.pack(pady=10, padx=20, fill="both", expand=True)
 
+# FILE LABEL
 file_label = tk.Label(
     frame,
     text="No file selected",
@@ -97,6 +124,7 @@ file_label = tk.Label(
 )
 file_label.pack(pady=15)
 
+# SELECT BUTTON
 btn_select = tk.Button(
     frame,
     text="📂 Select File",
@@ -110,6 +138,7 @@ btn_select = tk.Button(
 )
 btn_select.pack(pady=5)
 
+# ENCRYPT BUTTON
 btn_encrypt = tk.Button(
     frame,
     text="🔒 Encrypt File",
@@ -123,6 +152,7 @@ btn_encrypt = tk.Button(
 )
 btn_encrypt.pack(pady=5)
 
+# DECRYPT BUTTON
 btn_decrypt = tk.Button(
     frame,
     text="🔓 Decrypt File",
@@ -136,6 +166,7 @@ btn_decrypt = tk.Button(
 )
 btn_decrypt.pack(pady=5)
 
+# FOOTER
 footer = tk.Label(
     app,
     text="AES Encryption Tool | Portfolio Project",
