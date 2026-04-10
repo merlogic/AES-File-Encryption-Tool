@@ -25,25 +25,8 @@ A Python-based desktop application that allows users to securely encrypt and dec
 
 ---
 
-## Installation
 
-### 1. Clone the repository
-```bash
-git clone https://github.com/YOUR_USERNAME/FileEncryptionProject.git
-cd FileEncryptionProject
-  
-### 2. Create virtual environment
-
-```bash
-python -m venv .venv
-.venv\Scripts\activate   # Windows
-
-### 3. Install dependencies
-pip install pycryptodome
-
----
-
-Project Status : Under Development
+📌 Project Status: Under Development
 
 Planned features:
 - Password-based encryption
@@ -51,7 +34,7 @@ Planned features:
 - Drag & drop file support
 - EXE installer build
 
-Purpose
+## Purpose
 - This project is created for:
 
 Learning AES cryptography
