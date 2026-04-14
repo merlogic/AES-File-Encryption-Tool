@@ -15,7 +15,10 @@ A Python-based desktop application that allows users to securely encrypt and dec
 -  Secure key handling using environment variables
 -  Beginner-friendly encryption project
 
+
 ---
+
+## Screenshots
 
 ##  Tech Stack
 
