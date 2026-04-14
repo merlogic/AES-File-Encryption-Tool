@@ -18,7 +18,18 @@ A Python-based desktop application that allows users to securely encrypt and dec
 
 ---
 
-## Screenshots
+## 📸 Screenshots
+
+### Main Interface
+![Main Screen](/screenshots/main.PNG)
+
+### File Selection
+![File Selection](screenshots/File.PNG)
+
+### Encryption Process
+![Encryption Process](screenshots/Encrypt.PNG)
+
+---
 
 ##  Tech Stack
 
